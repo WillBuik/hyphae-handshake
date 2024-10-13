@@ -1,0 +1,26 @@
+[package]
+name = "quinn-hyphae"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.81"
+
+[dependencies]
+hyphae-handshake = { workspace = true, features = [ "alloc" ] }
+base16ct = { version = "0.2.0", features = ["std"] }
+base64ct = { version = "1.6.0", features = ["std"] }
+bytes = { version = "1", default-features = false }
+quinn = { version = "0.11", default-features = false, optional = true }
+quinn-proto = { version = "0.11", default-features = false }
+rand_core = { version = "0.6.4", features = ["getrandom"] }
+zeroize = { version = "1.8.1", default-features = false, features = ["zeroize_derive", "alloc"] }
+
+[features]
+default = [ "rustcrypto", "helper" ]
+helper = [ "dep:quinn" ]
+keylog = [ "hyphae-handshake/keylog" ]
+rustcrypto = [ "hyphae-handshake/rustcrypto" ]
+
+[dev-dependencies]
+anyhow = { version = "1.0" }
+quinn = { version = "0.11", default-features = false, features = ["runtime-tokio"] }
+tokio = { version = "1.40.0", features = ["full"] }

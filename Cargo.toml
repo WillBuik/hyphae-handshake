@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "handshake",
+    "quinn",
+]
+resolver = "2"
+
+[workspace.dependencies]
+hyphae-handshake = { path = "handshake", default-features = false }
