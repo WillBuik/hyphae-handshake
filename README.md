@@ -1,6 +1,11 @@
 Hyphae Handshake (*Noise Handshakes for QUIC*)
 ==============================================
 
+[![Crates.io](https://img.shields.io/crates/v/hyphae-handshake.svg?label=Crates.io%3A%20hyphae-handshake)](https://crates.io/crates/hyphae-handshake)
+[![Crates.io](https://img.shields.io/crates/v/quinn-hyphae.svg?label=Crates.io%3A%20quinn-hyphae)](https://crates.io/crates/quinn-hyphae)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/WillBuik/hyphae-handshake/tree/main/LICENSE-MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/WillBuik/hyphae-handshake/tree/main/LICENSE-APACHE2)
+
 Hyphae secures QUIC with Noise instead of TLS.
 
 Unlike other Noise handshake proposals for QUIC, Hyphae supports *all
@@ -78,7 +83,8 @@ let endpoint = hyphae_bidirectional_endpoint(crypto_config, None, socket)?;
 let conn = endpoint.connect(peer_addr, "zR4F09MibpGVw/L9oDvuItojQ/9MOSCt9mMK0kUNggA=")?.await?;
 ```
 
-There are more [examples](quinn/examples) in the `quinn-hyphae` crate.
+There are more [examples](https://github.com/WillBuik/hyphae-handshake/tree/main/quinn/examples)
+in the `quinn-hyphae` crate.
 
 ### Default Quinn Features
 
@@ -105,7 +111,7 @@ The selected Noise protocol's AEAD is used to provide packet and header
 protection for the handshake and 1-RTT packet spaces.
 
 All of the nitty-gritty details of the Hyphae handshake are described
-[here](HANDSHAKE.md).
+[here](https://github.com/WillBuik/hyphae-handshake/blob/main/HANDSHAKE.md).
 
 Roadmap:
 ========
