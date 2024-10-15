@@ -3,7 +3,7 @@ Hyphae Handshake (*Noise Handshakes for QUIC*)
 
 Hyphae secures QUIC with Noise instead of TLS.
 
-Unlike other Noise hanshake proposals for QUIC, Hyphae supports *all
+Unlike other Noise handshake proposals for QUIC, Hyphae supports *all
 Noise handshake patterns* (not just IK). Hyphae supports custom Noise
 payloads.
 
@@ -17,20 +17,20 @@ payloads.
   - Pluggable cryptographic and Noise backends (with built-in support
     for Rust Crypto)
 - Optional key-logging for diagnostics
-- QUIC header protection and initial packet space obfustication
+- QUIC header protection and initial packet space obfuscation
 
 ### Crates
 
 - **quinn-hyphae**: Hyphae support for Quinn. This is all you need to
   to get started.
 
-- **hyphae-hanshake**: The low-level guts of the Hyphae hanshake. You
+- **hyphae-handshake**: The low-level guts of the Hyphae handshake. You
   don't need to import this unless you are implementing a custom
   cryptographic backend or adding support for another QUIC library.
   For typical use, the `quinn-hyphae` crate re-exports everything you
   will need from this.
 
-### Minumum Rust Version
+### Minimum Rust Version
 
 Hyphae uses the `core::error::Error` trait so it needs Rust version
 `1.81` or higher to build.
@@ -89,11 +89,11 @@ crate provides the cryptographic backend.
 How Hyphae Works
 ================
 
-Hyphae hanshakes look like an unmodified Noise hanshake to your
+Hyphae handshakes look like an unmodified Noise handshake to your
 application. Under the hood, a few things are going on to make this
 work smoothly with QUIC:
 
-- Noise's proposed extesnsion for Additional Symmetric Key generation
+- Noise's proposed extension for Additional Symmetric Key generation
   is used to generate the extra keys QUIC needs.
 - Hyphae adds some additional data (e.g. QUIC transport parameters)
   to the first two Noise payloads.
@@ -104,7 +104,7 @@ work smoothly with QUIC:
 The selected Noise protocol's AEAD is used to provide packet and header
 protection for the handshake and 1-RTT packet spaces.
 
-All of the nitty-gritty details of the Hyphae hanshake are described
+All of the nitty-gritty details of the Hyphae handshake are described
 [here](HANDSHAKE.md).
 
 Roadmap:

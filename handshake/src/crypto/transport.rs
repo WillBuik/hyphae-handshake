@@ -1,6 +1,6 @@
 use std::iter::once;
 
-use crate::handshake::{HandshakeVersion, HYPHAE_INITIAL_SECRET_HKDF_LABLE, HYPHAE_RETRY_SECRET_HKDF_LABLE};
+use crate::handshake::{HandshakeVersion, HYPHAE_INITIAL_SECRET_HKDF_LABEL, HYPHAE_RETRY_SECRET_HKDF_LABEL};
 
 use super::{backends::{AeadBackend, HashBackend, HashExt}, CryptoError, InitialCrypto, SymmetricKey, TransportCrypto};
 
@@ -70,11 +70,11 @@ impl <A: AeadBackend, H: HashBackend> TransportCrypto for BuiltinTransportCrypto
 
 impl <A: AeadBackend, H: HashBackend> InitialCrypto for BuiltinTransportCrypto<A, H> {
     fn initial_level_secret(&self, handshake_version: HandshakeVersion, transport_label: &[u8], client_dcid: &[u8], level_secret: &mut SymmetricKey) -> Result<(), CryptoError> {
-        client_dcid_secret(&self.hash_impl, handshake_version, transport_label, client_dcid, HYPHAE_INITIAL_SECRET_HKDF_LABLE, level_secret)
+        client_dcid_secret(&self.hash_impl, handshake_version, transport_label, client_dcid, HYPHAE_INITIAL_SECRET_HKDF_LABEL, level_secret)
     }
 
     fn retry_tag_secret(&self, handshake_version: HandshakeVersion, transport_label: &[u8], client_dcid: &[u8], level_secret: &mut SymmetricKey) -> Result<(), CryptoError> {
-        client_dcid_secret(&self.hash_impl, handshake_version, transport_label, client_dcid, HYPHAE_RETRY_SECRET_HKDF_LABLE, level_secret)
+        client_dcid_secret(&self.hash_impl, handshake_version, transport_label, client_dcid, HYPHAE_RETRY_SECRET_HKDF_LABEL, level_secret)
     }
 }
 

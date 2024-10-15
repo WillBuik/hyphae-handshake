@@ -52,7 +52,7 @@ impl<A: AeadBackend> CipherState<A> {
     /// Encrypt `buffer` in-place.
     /// 
     /// `buffer` is a mutable slice containing the plaintext message
-    /// and 16 bytes of padding to hold the autentication tag. The
+    /// and 16 bytes of padding to hold the authentication tag. The
     /// plaintext is encrypted in-place and the tag overwrites the
     /// padding.
     pub fn encrypt_with_ad_in_place(&mut self, ad: &[u8], buffer: &mut [u8]) -> Result<(), CryptoError> {
@@ -69,7 +69,7 @@ impl<A: AeadBackend> CipherState<A> {
     /// Decrypt `buffer` in-place.
     /// 
     /// `buffer` is a mutable slice containing the ciphertext message
-    /// and 16 byte autentication tag. The ciphertext is decrypted in-
+    /// and 16 byte authentication tag. The ciphertext is decrypted in-
     /// place and the authentication tag is left in the buffer.
     /// 
     /// Returns a slice containing the decrypted message.
@@ -443,9 +443,9 @@ impl<A: AeadBackend, H: HashBackend> HandshakeState<A, H> {
 
     #[cfg(any(test, feature = "alloc"))]
     pub fn write_message_vec(&mut self, payload: &[u8]) -> Result<Vec<u8>, CryptoError> {
-        let (token_bytes, paylod_tag_bytes) = self.next_message_layout();
+        let (token_bytes, payload_tag_bytes) = self.next_message_layout();
         // todo, check payload max len
-        let mut message = vec![0u8; token_bytes + payload.len() + paylod_tag_bytes];
+        let mut message = vec![0u8; token_bytes + payload.len() + payload_tag_bytes];
         message[token_bytes..token_bytes + payload.len()].copy_from_slice(payload);
         self.write_message_in_place(&mut message).map_err(|e| { message.zeroize(); e })?;
         Ok(message)

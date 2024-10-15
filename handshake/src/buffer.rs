@@ -24,7 +24,7 @@ pub trait Buffer: AsMut<[u8]> + AsRef<[u8]> {
     fn clear_range(&mut self, range: Range<usize>);
 }
 
-// Implmenent buffer for `Vec<u8>`.
+// Implement buffer for `Vec<u8>`.
 #[cfg(any(test, feature = "alloc"))]
 impl Buffer for Vec<u8> {
     fn remaining(&self) -> usize {

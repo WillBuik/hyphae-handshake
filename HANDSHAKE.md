@@ -17,24 +17,24 @@ requirements:
    This data needs to be combined with the application's Noise payloads.
 
 2. QUIC needs a forward-secure secret as early in the handshake as
-   possible to transition from the obfusticated initial packet space to
+   possible to transition from the obfuscated initial packet space to
    the encrypted handshake packet space. The Noise ASK proposal can
    generate this secret but there is still some complication to avoid
    sending the second Noise message's payload in the initial packet
    space.
 
-To statisfy these requirements, Hyphae rearranges the first two Noise
+To satisfy these requirements, Hyphae rearranges the first two Noise
 handshake payloads – though not in a way that alters their security
 properties described in [Section 7.7](https://noiseprotocol.org/noise.html#payload-security-properties)
 of the protocol framework.
 
 Hyphae uses the proposed ASK [\(Additional Symmetric Keys\)](https://github.com/noiseprotocol/noise_wiki/wiki/Additional-Symmetric-Keys)
-extesnsion to generate the additional keys needed by QUIC.
+extension to generate the additional keys needed by QUIC.
 
 Handshake Messages
 ------------------
 
-Handshake messages consist of a single byte idenifier followed by the
+Handshake messages consist of a single byte identifier followed by the
 contents of the message. Most of these messages are from the underlying
 Noise handshake, but there are a few extras. These messages must be
 delivered in order.
@@ -42,7 +42,7 @@ delivered in order.
 - Preamble: Optional, unprotected application specific preamble sent by
   the initiator. This can be used by the responder to select a Noise
   protocol for the handshake if it supports more than one. If an initial
-  message is recieved first, the preamble is empty. 
+  message is received first, the preamble is empty. 
   `ID: 1`
 - Initial: Contains the first two Noise messages in the handshake, sent
   in the initial packet space.
@@ -56,7 +56,7 @@ delivered in order.
   message.
   `ID: 4`
 - Final or FinalPayload: Sent after the Noise handshake is finished.
-  The payload varient can be used to carry one last payload in each
+  The payload variant can be used to carry one last payload in each
   direction. Sent in the 1-RTT packet space. Application data can be
   sent after the last Noise message, it does not wait for final messages
   to be received.
@@ -71,7 +71,7 @@ Noise Handshake and Payloads
 This section describes how Hyphae transforms Noise handshakes.
 
 A Noise handshake consists of a protocol, prologue, and a payload for
-each message in the handshake pattern. For example, `XX`:
+each message in the handshake pattern. For example, `Noise_XX`:
 
 ```
 PROTOCOL: "Noise_XX_25519_ChaChaPoly_BLAKE2s"
@@ -121,7 +121,7 @@ found in [handshake.rs](handshake/src/handshake.rs).
 
 ### Payload Security Properties
 
-- The initial packet space is only obfusticated with a key based on the
+- The initial packet space is only obfuscated with a key based on the
   QUIC client connection ID (like in QUIC-TLS). As such:
   - The preamble is essentially sent as plain-text
   - The COMPOUND_INITIATOR_CONFIG_PAYLOAD has the same security properties
@@ -166,12 +166,12 @@ here.
 
 ### Initial Keys
 
-Like QUIC-TLS, Hyphae obfusticates the initial packet space with a key
+Like QUIC-TLS, Hyphae obfuscated the initial packet space with a key
 based on the original client connection ID. Since the Noise protocol
-isn't known at this time, ChaChaPoly and BLAKE2s are always used as the
-AEAD and hash algorithm for the initial packet space.
+isn't known at this time, `ChaChaPoly` and `BLAKE2s` are always used as
+the AEAD and hash algorithm for the initial packet space.
 
-The initial level secret is caculated using `HKDF` with an empty salt,
+The initial level secret is calculated using `HKDF` with an empty salt,
 `info: "hyphae initial"` and the following `IKM`:
 
 ```
@@ -189,7 +189,7 @@ Sub-keys for the initial packet space are calculated as described above.
 ### 1-RTT Rekey
 
 1-RTT rekey is accomplished by generating new level secrets from the
-"hyphae key" ASK chain. During rekey, only new packet protection keys
+`"hyphae key"` ASK chain. During rekey, only new packet protection keys
 are generated.
 
 Packet Protection
@@ -214,7 +214,7 @@ for more details.
 QUIC Version Number
 -------------------
 
-QUIC version 1 (RFC 9000)[https://datatracker.ietf.org/doc/html/rfc9000]
+QUIC version 1 [RFC 9000](https://datatracker.ietf.org/doc/html/rfc9000)
 secured with Hyphae Handshake version 1 uses the version number
 `0x48510101` (big-endian), handshake version label: `"hyphae-h-v1"` and
 transport label: `"quic-v1"`.

@@ -54,7 +54,7 @@ pub trait HandshakeInfo {
     /// Returns `true` if the Noise handshake if finished.
     /// 
     /// This will always be false until the last payload read and for
-    /// final messagse.
+    /// final message.
     fn is_finished(&self) -> bool;
 
     /// Returns the current message position (indexed from 1).
@@ -86,7 +86,7 @@ pub trait HandshakeInfo {
 
 /// Trait for `HandshakeConfig`s that can be shared between threads.
 /// 
-/// This has a blanket implmenentation for any `HandshakeConfig` with
+/// This has a blanket implementation for any `HandshakeConfig` with
 /// a `HandshakeDriver` that is also `Send + Sync + 'static`.
 pub trait SyncHandshakeConfig:
     HandshakeConfig<Driver: Send + Sync + 'static> +

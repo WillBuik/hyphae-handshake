@@ -1,7 +1,7 @@
 //! Helper functions to create Quinn `Endpoints` with Hyphae's QUIC
 //! version number configured.
 //! 
-//! If your application requries further customization of the endpoint's
+//! If your application requires further customization of the endpoint's
 //! settings, you can use the code in this module as a starting point.
 //! 
 

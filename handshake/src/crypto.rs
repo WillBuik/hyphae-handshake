@@ -1,4 +1,4 @@
-//! Traits for Noise handshakes and encryption primatives needed by Hyphae.
+//! Traits for Noise handshakes and encryption primitives needed by Hyphae.
 //! 
 
 use rand_core::{CryptoRng, RngCore};
@@ -86,7 +86,7 @@ pub trait CryptoBackend {
     /// Backend's `InitialCrypto` implementation.
     type InitialCrypto: InitialCrypto;
 
-    /// Backend's `NosieHandshake` implementation.
+    /// Backend's `NoiseHandshake` implementation.
     type NoiseHandshake: NoiseHandshake;
 
     /// Backend's `TransportCrypto` implementation.
@@ -101,7 +101,7 @@ pub trait CryptoBackend {
 
     /// Returns `InitialCrypto`.
     /// 
-    /// `InitialCrypto` is used to obfusticate data in the initial
+    /// `InitialCrypto` is used to obfuscate data in the initial
     /// packet space and calculate retry packet integrity tags.
     /// 
     /// Hyphae initial crypto always uses `ChaChaPoly` and `BLAKE2s`.
@@ -194,7 +194,7 @@ pub trait TransportRekey: Default {
 
 /// Trait for `CryptoBackend`s that can be shared between threads.
 /// 
-/// This has a blanket implmenentation for any `CryptoBackend` with
+/// This has a blanket implementation for any `CryptoBackend` with
 /// associated types that are also `Send + Sync + 'static`.
 pub trait SyncCryptoBackend:
     CryptoBackend<

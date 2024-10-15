@@ -3,7 +3,7 @@
 //!
 //! Hyphae secures QUIC with Noise instead of TLS.
 //!
-//! Unlike other Noise hanshake proposals for QUIC, Hyphae supports *all
+//! Unlike other Noise handshake proposals for QUIC, Hyphae supports *all
 //! Noise handshake patterns* (not just IK). Hyphae supports custom Noise
 //! payloads.
 //! 
@@ -17,7 +17,7 @@
 //!   - Pluggable cryptographic and Noise backends (with built-in support
 //!     for Rust Crypto)
 //! - Optional key-logging for diagnostics
-//! - QUIC header protection and initial packet space obfustication
+//! - QUIC header protection and initial packet space obfuscation
 //! 
 //! ### Examples
 //! 

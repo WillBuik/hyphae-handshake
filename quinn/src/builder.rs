@@ -1,6 +1,6 @@
 //! Builder to set up typical Hyphae handshake flows.
 //! 
-//! See the `HandshakeBuilder` documentaion for more info.
+//! See the `HandshakeBuilder` documentation for more info.
 //! 
 
 use std::sync::Arc;
@@ -16,7 +16,7 @@ use zeroize::{Zeroize, ZeroizeOnDrop};
 /// Hyphae handshake configuration builder for Quinn.
 /// 
 /// This builder creates a `HandshakeConfig` that can handle most
-/// handshake flows instead of fully implmenting `HandshakeConfig` by
+/// handshake flows instead of fully implementing `HandshakeConfig` by
 /// hand.
 pub struct HandshakeBuilder<'a, T>
 where
@@ -64,20 +64,20 @@ where
         self
     }
 
-    /// Set the hanshake's prologue.
+    /// Set the handshake's prologue.
     /// 
     /// Defaults to empty.
-    pub fn with_prolouge(mut self, prologue: &'a [u8]) -> Self {
+    pub fn with_prologue(mut self, prologue: &'a [u8]) -> Self {
         self.prologue = Some(prologue);
         self
     }
 
-    /// Use a custom payload driver for this hanshake.
+    /// Use a custom payload driver for this handshake.
     /// 
     /// The supplied `payload_driver` will be cloned for every incoming
-    /// and outgoing connection to customize the hanshake's behavior.
+    /// and outgoing connection to customize the handshake's behavior.
     /// 
-    /// See the `PayloadDriver` and `QuinnHanshakeData` documentation
+    /// See the `PayloadDriver` and `QuinnHandshakeData` documentation
     /// and the "payload" example for more info.
     pub fn with_cloned_payload_driver<TT> (self, payload_driver: TT) -> HandshakeBuilder<'a, TT>
     where
@@ -125,10 +125,10 @@ where
             return Err(CryptoError::UnsupportedProtocol);
         }
 
-        Ok(HyphaeCryptoConfig::new_with_backend(self.build_hanshake_config()?, crypto_backend))
+        Ok(HyphaeCryptoConfig::new_with_backend(self.build_handshake_config()?, crypto_backend))
     }
 
-    fn build_hanshake_config(self) -> Result<BasicHandshakeConfig<T>, CryptoError> {
+    fn build_handshake_config(self) -> Result<BasicHandshakeConfig<T>, CryptoError> {
         if self.rs_from_server_name && self.rs.is_some() {
             return Err(CryptoError::InvalidInitialization);
         }

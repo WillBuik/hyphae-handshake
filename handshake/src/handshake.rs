@@ -39,8 +39,8 @@ impl HandshakeVersion {
     }
 }
 
-pub const HYPHAE_INITIAL_SECRET_HKDF_LABLE: &'static [u8] = b"hyphae initial";
-pub const HYPHAE_RETRY_SECRET_HKDF_LABLE: &'static [u8] = b"hyphae retry";
+pub const HYPHAE_INITIAL_SECRET_HKDF_LABEL: &'static [u8] = b"hyphae initial";
+pub const HYPHAE_RETRY_SECRET_HKDF_LABEL: &'static [u8] = b"hyphae retry";
 pub const HYPHAE_KEY_ASK_LABEL: &'static [u8] = b"hyphae key";
 pub const HYPHAE_INIT_DATA_HKDF_LABEL: &'static [u8] = b"init data";
 pub const HYPHAE_RESP_DATA_HKDF_LABEL: &'static [u8] = b"resp data";
@@ -141,7 +141,7 @@ impl <T: HandshakeDriver, B: CryptoBackend, R: Deref<Target = B>> AllocHyphaeHan
         self.peer_transport_params.as_ref().map(Vec::as_slice)
     }
 
-    /// Returns true once the Noise porition of the hanshake is finished
+    /// Returns true once the Noise portion of the handshake is finished
     /// and 1-RTT keys are available.
     /// 
     /// Peers will still exchange final messages but this happens in the
@@ -161,12 +161,12 @@ impl <T: HandshakeDriver, B: CryptoBackend, R: Deref<Target = B>> AllocHyphaeHan
         }
     }
 
-    /// Returns true once this peer has sent and recieved its final
+    /// Returns true once this peer has sent and received its final
     /// message.
     /// 
     /// At this point, all handshake state can be discarded.
     pub fn is_handshake_finalized(&self) -> bool {
-        //todo, broken, fix this - also need to dispose of noise handshake before reading eachothers finals to clear keys in case the other side never responds
+        //todo, broken, fix this - also need to dispose of noise handshake before reading each other's finals to clear keys in case the other side never responds
         match self.phase {
             AllocHyphaeHandshakePhase::Initiator(AllocHyphaeInitiatorPhase::Finalized) => true,
             AllocHyphaeHandshakePhase::Responder(AllocHyphaeResponderPhase::Finalized) => true,
@@ -659,8 +659,8 @@ impl PayloadFrame {
     /// essential to the handshake. Frame IDs less than the optional
     /// base must be recognized or the handshake will fail.
     /// 
-    /// This feature isn't used yet, but is here to allow extensiblity
-    /// without reving the handshake version.
+    /// This feature isn't used yet, but is here to allow extensibility
+    /// without revving the handshake version.
     const OPTIONAL_BASE: u8 = 128;
 
     fn ok_in(self, message: HandshakeMessage, from_initiator: bool) -> Result<(), Error> {
@@ -962,7 +962,7 @@ impl <'a> MessageReader<'a> {
     }
 
     /// Return `(transport_params, zero_rtt_accepted, application_payload)`
-    /// from the resonder's deferred payload message.
+    /// from the responder's deferred payload message.
     pub fn deferred_resp_payloads(&self) -> Result<(&'a [u8], bool, &'a [u8]), Error> {
         if self.message_type != HandshakeMessage::DeferredPayload {
             return Err(Error::Internal);

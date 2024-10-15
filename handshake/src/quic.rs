@@ -4,7 +4,7 @@ use crate::Error;
 /// secured with the Hyphae version 1 handshake.
 /// 
 /// In big-endian, it is the bytes `b"HQ\x01\x01"`. E.g.
-/// "hyphea-h-v1.quic-v1.", the 3rd byte representing the handshake
+/// "hyphae-h-v1.quic-v1.", the 3rd byte representing the handshake
 /// version and the 4th byte representing the QUIC version.
 pub const HYPHAE_H_V1_QUIC_V1_VERSION: u32 = 0x48510101;
 

@@ -13,7 +13,7 @@ pub use hyphae_handshake::customization::*;
 /// identity returned by Quinn's `handshake_data()` and `peer_identity()`
 /// calls.
 /// 
-/// This must be implmented for custom payload drivers passed to the
+/// This must be implemented for custom payload drivers passed to the
 /// builder and on the handshake driver of a customized handshake
 /// configuration. See the implementation of `EmptyPayloadDriver` for
 /// a starting point.

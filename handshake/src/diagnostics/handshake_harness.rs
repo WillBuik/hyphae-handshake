@@ -93,7 +93,7 @@ pub mod tests {
 
     #[derive(Default, Debug)]
     struct TestProgressTracker {
-        init_wrote_pramble: bool,
+        init_wrote_preamble: bool,
         init_payloads: u8,
         resp_payloads: u8,
         handshake_finished: bool,
@@ -111,10 +111,10 @@ pub mod tests {
         }
 
         pub fn wrote_preamble(&mut self) {
-            if self.init_wrote_pramble {
+            if self.init_wrote_preamble {
                 panic!("preamble double write");
             }
-            self.init_wrote_pramble = true;
+            self.init_wrote_preamble = true;
         }
 
         pub fn noise_payload(&mut self, initiator: bool, position: u8, handshake_finished: bool, prev_hash: &[u8]) {
@@ -150,7 +150,7 @@ pub mod tests {
         }
 
         pub fn assert_finished(&self, expected_payloads: u8) {
-            assert!(self.init_wrote_pramble);
+            assert!(self.init_wrote_preamble);
             assert_eq!(self.init_payloads, expected_payloads);
             assert_eq!(self.resp_payloads, expected_payloads);
             assert!(self.init_recv_final);

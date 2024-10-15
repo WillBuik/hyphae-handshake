@@ -267,7 +267,7 @@ where
         let Some(label) = SecretLabel::next(self.last_logged_secret) else {
             return;
         };
-        let Some(reciever) = self.receiver.as_ref() else {
+        let Some(receiver) = self.receiver.as_ref() else {
             return;
         };
 
@@ -278,10 +278,10 @@ where
         };
 
         if !matches!(label, SecretLabel::OneRtt(_)) {
-            reciever.invalid_secret("", u8::MAX, &secret);
+            receiver.invalid_secret("", u8::MAX, &secret);
         }
 
-        reciever.log_secret(secret);
+        receiver.log_secret(secret);
         self.last_logged_secret = Some(label);
     }
 }
