@@ -1,8 +1,16 @@
 [package]
 name = "quinn-hyphae"
 version = "0.1.0-beta.0"
-edition = "2021"
-rust-version = "1.81"
+readme = "../README.md"
+description = "Noise protocol framework handshakes for the Quinn QUIC library"
+keywords = ["noise", "quic", "quinn"]
+categories = ["authentication", "cryptography", "network-programming"]
+
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
 
 [dependencies]
 hyphae-handshake = { workspace = true, features = [ "alloc" ] }

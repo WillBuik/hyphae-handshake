@@ -1,8 +1,16 @@
 [package]
 name = "hyphae-handshake"
 version = "0.1.0-beta.0"
-edition = "2021"
-rust-version = "1.81"
+readme = "../README.md"
+description = "Noise protocol framework handshakes for QUIC"
+keywords = ["noise", "quic", "no-std"]
+categories = ["authentication", "cryptography", "no-std", "no-std::no-alloc"]
+
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
 
 [dependencies]
 aes-gcm = { version = "0.10.3", default-features = false, features = ["aes"], optional = true }
