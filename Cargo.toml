@@ -13,4 +13,4 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-hyphae-handshake = { path = "handshake", default-features = false }
+hyphae-handshake = { path = "handshake", version = "0.1.0-beta.0", default-features = false }
