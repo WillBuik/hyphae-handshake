@@ -9,7 +9,7 @@ payloads.
 
 ### Features:
 
-- Secure QUIC connections with a Noise handshake instead of TLS
+- Secure QUIC with a Noise handshake instead of TLS
 - Use **any handshake pattern**, AEAD, and hash algorithm (not just IK)
 - Quinn support in the `quinn-hyphae` crate
 - Customizable:
