@@ -1,7 +1,7 @@
 Handshake Internals
 ===================
 
-*This document is still a work-in-progress, for more details see (handshake.rs)[handshake/src/handshake.rs]*
+*This document is still a work-in-progress, for more details see [handshake.rs](handshake/src/handshake.rs)*
 
 Hyphae allows you to secure QUIC with a Noise handshake, from the
 [Noise Protocol Framework](https://noiseprotocol.org/noise.html). 
@@ -25,10 +25,10 @@ requirements:
 
 To statisfy these requirements, Hyphae rearranges the first two Noise
 handshake payloads – though not in a way that alters their security
-properties described in (Section 7.7)[https://noiseprotocol.org/noise.html#payload-security-properties]
+properties described in [Section 7.7](https://noiseprotocol.org/noise.html#payload-security-properties)
 of the protocol framework.
 
-Hyphae uses the proposed ASK (\(Additional Symmetric Keys\))[https://github.com/noiseprotocol/noise_wiki/wiki/Additional-Symmetric-Keys]
+Hyphae uses the proposed ASK [\(Additional Symmetric Keys\)](https://github.com/noiseprotocol/noise_wiki/wiki/Additional-Symmetric-Keys)
 extesnsion to generate the additional keys needed by QUIC.
 
 Handshake Messages
@@ -117,7 +117,7 @@ TRANSPORT_LABEL: "quic-v1"
 ```
 
 The format of the compound payloads are not documented yet but can be
-found in (handshake.rs)[handshake/src/handshake.rs].
+found in [handshake.rs](handshake/src/handshake.rs).
 
 ### Payload Security Properties
 
@@ -196,19 +196,19 @@ Packet Protection
 -----------------
 
 Packet protection is applied to each QUIC payload as described in
-(Out-of-order transport messages)[https://noiseprotocol.org/noise.html#out-of-order-transport-messages]
+[Out-of-order transport messages](https://noiseprotocol.org/noise.html#out-of-order-transport-messages)
 in the Noise protocol framework with that side's packet protection key
 for the packet space. The packet number is used as the nonce.
 
 ### Header Protection
 
 Header protection is applied exactly as it is in QUIC-TLS for ChaChaPoly
-and AES256-GCM. See (RFC 9001: Header Protection)[https://datatracker.ietf.org/doc/html/rfc9001#name-header-protection].
+and AES256-GCM. See [RFC 9001: Header Protection](https://datatracker.ietf.org/doc/html/rfc9001#name-header-protection).
 
 ### Retry Integrity Tag
 
 Retry integrity tags are calculated differently from QUIC-TLS. See the
-`retry_tag` method in (quinn-hyphae's config.rs)[quinn/src/config.rs]
+`retry_tag` method in [quinn-hyphae's config.rs](quinn/src/config.rs)
 for more details.
 
 QUIC Version Number
@@ -219,4 +219,4 @@ secured with Hyphae Handshake version 1 uses the version number
 `0x48510101` (big-endian), handshake version label: `"hyphae-h-v1"` and
 transport label: `"quic-v1"`.
 
-See (hyphae-handshake's quic.rs)[handshake/src/quic.rs] for more info.
+See [hyphae-handshake's quic.rs](handshake/src/quic.rs) for more info.
