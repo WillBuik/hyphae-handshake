@@ -1,3 +1,5 @@
+use rand_core::{CryptoRng, RngCore};
+
 use crate::{buffer::Buffer, crypto::{CryptoError, SecretKeySetup}, Error};
 
 pub trait HandshakeConfig {
@@ -38,7 +40,7 @@ pub trait HandshakeInfo {
     /// 
     /// This can only be called by the driver's `new_initiator` and
     /// `new_responder` methods.
-    fn initialize(&mut self, protocol: &str, prologue: &[u8], s: Option<SecretKeySetup>, rs: Option<&[u8]>) -> Result<(), CryptoError>;
+    fn initialize(&mut self, rng: &mut (impl CryptoRng + RngCore), protocol: &str, prologue: &[u8], s: Option<SecretKeySetup>, rs: Option<&[u8]>) -> Result<(), CryptoError>;
 
     /// Set a handshake token (such as a PSK).
     /// 

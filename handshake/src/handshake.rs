@@ -1,6 +1,6 @@
 use std::{iter::once, mem, ops::Deref};
 
-use rand_core::OsRng;
+use rand_core::{CryptoRng, RngCore};
 
 use crate::{buffer::{AppendOnlyBuffer, Buffer, BufferFullError, MaxLenBuffer, VarIntSize, VarLengthPrefixBuffer}, crypto::{CryptoBackend, CryptoError, NoiseHandshake, SecretKeySetup, SymmetricKey, TransportCrypto}, customization::{HandshakeConfig, HandshakeDriver, HandshakeInfo}, Error};
 
@@ -769,7 +769,7 @@ impl <'a, X: NoiseHandshake> NoiseHandshakeWrapper<'a, X> {
 }
 
 impl <X: NoiseHandshake> HandshakeInfo for NoiseHandshakeWrapper<'_, X> {
-    fn initialize(&mut self, protocol: &str, prologue: &[u8], s: Option<SecretKeySetup>, rs: Option<&[u8]>) -> Result<(), CryptoError> {
+    fn initialize(&mut self, rng: &mut (impl CryptoRng + RngCore), protocol: &str, prologue: &[u8], s: Option<SecretKeySetup>, rs: Option<&[u8]>) -> Result<(), CryptoError> {
         let Some(initiator) = self.initiator else {
             return Err(CryptoError::Internal);
         };
@@ -794,7 +794,7 @@ impl <X: NoiseHandshake> HandshakeInfo for NoiseHandshakeWrapper<'_, X> {
             .chain(once(preamble))
             .chain(once(prologue));
 
-        self.inner.initialize(&mut OsRng, protocol, initiator, handshake_prologue, s, rs)
+        self.inner.initialize(rng, protocol, initiator, handshake_prologue, s, rs)
     }
 
     fn set_token(&mut self, _token: &str, _value: &[u8]) -> Result<(), CryptoError> {

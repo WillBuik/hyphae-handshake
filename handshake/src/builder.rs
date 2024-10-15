@@ -1,3 +1,5 @@
+use rand_core::OsRng;
+
 use crate::{buffer::Buffer, crypto::{noise::x25519::{PublicKey, SecretKey}, CryptoError, SecretKeySetup}, customization::{HandshakeConfig, HandshakeDriver, HandshakeInfo, PayloadDriver}, Error};
 
 pub struct HandshakeBuilder<'a, T: PayloadDriver + Clone> {
@@ -67,7 +69,7 @@ impl<T: PayloadDriver + Clone> HandshakeConfig for BasicHandshakeConfig<T> {
     type Driver = BasicHandshakeDriver<T>;
 
     fn new_initiator(&self, _server_name: &str, noise_handshake: &mut impl HandshakeInfo) -> Result<Self::Driver, Error> {
-        noise_handshake.initialize(self.protocol, &[], self.s.as_ref().map(SecretKey::as_bytes).map(SecretKeySetup::from), self.rs.as_ref().map(PublicKey::as_ref))?;
+        noise_handshake.initialize(&mut OsRng, self.protocol, &[], self.s.as_ref().map(SecretKey::as_bytes).map(SecretKeySetup::from), self.rs.as_ref().map(PublicKey::as_ref))?;
         
         Ok(BasicHandshakeDriver {
             payload_driver: self.payload_driver.clone(),
@@ -75,7 +77,7 @@ impl<T: PayloadDriver + Clone> HandshakeConfig for BasicHandshakeConfig<T> {
     }
     
     fn new_responder(&self, _preamble: &[u8], noise_handshake: &mut impl HandshakeInfo) -> Result<Self::Driver, Error> {
-        noise_handshake.initialize(self.protocol, &[], self.s.as_ref().map(SecretKey::as_bytes).map(SecretKeySetup::from), self.rs.as_ref().map(PublicKey::as_ref))?;
+        noise_handshake.initialize(&mut OsRng, self.protocol, &[], self.s.as_ref().map(SecretKey::as_bytes).map(SecretKeySetup::from), self.rs.as_ref().map(PublicKey::as_ref))?;
         
         Ok(BasicHandshakeDriver {
             payload_driver: self.payload_driver.clone(),

@@ -202,7 +202,7 @@ pub mod tests {
                 HandshakePattern::XX => Some(SecretKeySetup::Local(&s_secret)),
                 _ => None,
             };
-            noise_handshake.initialize(&self.protocol(), self.prologue(), s, None)?;
+            noise_handshake.initialize(&mut OsRng, &self.protocol(), self.prologue(), s, None)?;
 
             Ok(TestHandshakeDriver {
                 test: self.test.clone(),
@@ -230,7 +230,7 @@ pub mod tests {
                 _ => None,
             };
 
-            noise_handshake.initialize(&self.protocol(), self.prologue(), s, None)?;
+            noise_handshake.initialize(&mut OsRng, &self.protocol(), self.prologue(), s, None)?;
 
             Ok(TestHandshakeDriver {
                 test: self.test.clone(),

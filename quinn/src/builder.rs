@@ -11,6 +11,7 @@ use crate::customization::{HandshakeConfig, HandshakeDriver, PayloadDriver, Hand
 use crate::buffer::Buffer;
 use crate::crypto::{CryptoError, SecretKeySetup, SyncCryptoBackend};
 use base64ct::Encoding;
+use rand_core::OsRng;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 /// Hyphae handshake configuration builder for Quinn.
@@ -176,6 +177,7 @@ where
         };
 
         noise_handshake.initialize(
+            &mut OsRng,
             &self.protocol, 
             self.prologue.as_ref().map(Vec::as_slice).unwrap_or(b""),
             self.s.as_ref().map(Vec::as_slice).map(SecretKeySetup::from),
@@ -192,6 +194,7 @@ where
         }
 
         noise_handshake.initialize(
+            &mut OsRng,
             &self.protocol, 
             self.prologue.as_ref().map(Vec::as_slice).unwrap_or(b""),
             self.s.as_ref().map(Vec::as_slice).map(SecretKeySetup::from),
