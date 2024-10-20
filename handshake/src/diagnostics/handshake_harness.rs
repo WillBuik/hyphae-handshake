@@ -93,6 +93,8 @@ pub mod tests {
 
     #[derive(Default, Debug)]
     struct TestProgressTracker {
+        init_s_public: Option<Vec<u8>>,
+        resp_s_public: Option<Vec<u8>>,
         init_wrote_preamble: bool,
         init_payloads: u8,
         resp_payloads: u8,
@@ -103,6 +105,8 @@ pub mod tests {
         resp_final_hash: Option<Vec<u8>>,
         init_recv_final: bool,
         resp_recv_final: bool,
+        rs_from_resp: Option<Vec<u8>>,
+        rs_from_init: Option<Vec<u8>>,
     }
 
     impl TestProgressTracker {
@@ -117,14 +121,14 @@ pub mod tests {
             self.init_wrote_preamble = true;
         }
 
-        pub fn noise_payload(&mut self, initiator: bool, position: u8, handshake_finished: bool, prev_hash: &[u8]) {
+        pub fn noise_payload(&mut self, initiator: bool, position: u8, handshake_finished: bool, prev_hash: &[u8], rs: Option<&[u8]>) {
             if self.handshake_finished {
                 panic!("handshake finished for more than one noise payload")
             }
 
-            let (last_pos, hashes) = match initiator {
-                true => (&mut self.init_payloads, &mut self.init_message_hashes),
-                false => (&mut self.resp_payloads, &mut self.resp_message_hashes),
+            let (last_pos, hashes, rs_exp) = match initiator {
+                true => (&mut self.init_payloads, &mut self.init_message_hashes, &mut self.rs_from_resp),
+                false => (&mut self.resp_payloads, &mut self.resp_message_hashes, &mut self.rs_from_init),
             };
 
             if *last_pos + 1 != position {
@@ -133,18 +137,35 @@ pub mod tests {
             *last_pos = position;
 
             hashes.push(prev_hash.to_vec());
+
+            if rs_exp.is_none() {
+                *rs_exp = rs.map(Vec::from);
+            } else {
+                if rs_exp.as_ref().map(Vec::as_slice) != rs {
+                    panic!("rs changed mid-handshake")
+                }
+            }
             
             self.handshake_finished = handshake_finished;
         }
 
-        pub fn recv_final_payload(&mut self, initiator: bool, final_hash: &[u8]) {
-            let (done, side_final_hash) = match initiator {
-                true => (&mut self.init_recv_final, &mut self.init_final_hash),
-                false => (&mut self.resp_recv_final, &mut self.resp_final_hash),
+        pub fn recv_final_payload(&mut self, initiator: bool, final_hash: &[u8], rs: Option<&[u8]>) {
+            let (done, side_final_hash, rs_exp) = match initiator {
+                true => (&mut self.init_recv_final, &mut self.init_final_hash, &mut self.rs_from_resp),
+                false => (&mut self.resp_recv_final, &mut self.resp_final_hash, &mut self.rs_from_init),
             };
             if *done {
                 panic!("double recv finale, initiator: {initiator}");
             }
+
+            if rs_exp.is_none() {
+                *rs_exp = rs.map(Vec::from);
+            } else {
+                if rs_exp.as_ref().map(Vec::as_slice) != rs {
+                    panic!("rs changed mid-handshake")
+                }
+            }
+            
             *done = true;
             *side_final_hash = Some(final_hash.to_vec());
         }
@@ -159,6 +180,8 @@ pub mod tests {
             assert_eq!(self.init_final_hash, self.resp_final_hash);
             assert_eq!(self.init_message_hashes, self.resp_message_hashes);
             assert!(self.handshake_finished);
+            assert_eq!(self.init_s_public, self.rs_from_init);
+            assert_eq!(self.resp_s_public, self.rs_from_resp);
         }
     }
 
@@ -198,8 +221,12 @@ pub mod tests {
     
         fn new_initiator(&self, _server_name: &str, noise_handshake: &mut impl HandshakeInfo) -> Result<Self::Driver, Error> {
             let s_secret = RustCryptoBackend.new_secret_key(&mut OsRng);
+            let s_public = RustCryptoBackend.public_key(&s_secret);
             let s = match self.handshake {
-                HandshakePattern::XX => Some(SecretKeySetup::Local(&s_secret)),
+                HandshakePattern::XX => {
+                    self.tracker.borrow_mut().init_s_public = Some(s_public.to_vec());
+                    Some(SecretKeySetup::Local(&s_secret))
+                },
                 _ => None,
             };
             noise_handshake.initialize(&mut OsRng, &self.protocol(), self.prologue(), s, None)?;
@@ -225,8 +252,12 @@ pub mod tests {
             }
             
             let s_secret = RustCryptoBackend.new_secret_key(&mut OsRng);
+            let s_public = RustCryptoBackend.public_key(&s_secret);
             let s = match self.handshake {
-                HandshakePattern::XX => Some(SecretKeySetup::Local(&s_secret)),
+                HandshakePattern::XX => {
+                    self.tracker.borrow_mut().resp_s_public = Some(s_public.to_vec());
+                    Some(SecretKeySetup::Local(&s_secret))
+                },
                 _ => None,
             };
 
@@ -259,7 +290,7 @@ pub mod tests {
         }
     
         fn read_final_payload(&mut self, payload: &[u8], noise_handshake: &mut impl HandshakeInfo) -> Result<(), Error> {
-            self.tracker.borrow_mut().recv_final_payload(noise_handshake.is_initiator(), noise_handshake.final_handshake_hash().unwrap());
+            self.tracker.borrow_mut().recv_final_payload(noise_handshake.is_initiator(), noise_handshake.final_handshake_hash().unwrap(), noise_handshake.remote_public());
 
             match self.test {
                 TestCase::ClearPayloadWriteBadFrame => {
@@ -284,7 +315,8 @@ pub mod tests {
                 noise_handshake.is_initiator(), 
                 noise_handshake.handshake_position().unwrap(), 
                 noise_handshake.is_finished(), 
-                noise_handshake.prev_handshake_hash().unwrap()
+                noise_handshake.prev_handshake_hash().unwrap(),
+                noise_handshake.remote_public()
             );
 
             match self.test {
@@ -309,7 +341,8 @@ pub mod tests {
                 noise_handshake.is_initiator(), 
                 noise_handshake.handshake_position().unwrap(), 
                 noise_handshake.is_finished(), 
-                noise_handshake.prev_handshake_hash().unwrap()
+                noise_handshake.prev_handshake_hash().unwrap(),
+                noise_handshake.remote_public()
             );
 
             match self.test {

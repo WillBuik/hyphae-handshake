@@ -816,6 +816,10 @@ impl <X: NoiseHandshake> HandshakeInfo for NoiseHandshakeWrapper<'_, X> {
     fn handshake_position(&self) -> Option<u8> {
         self.position
     }
+    
+    fn remote_public(&self) -> Option<&[u8]> {
+        self.inner.remote_public()
+    }
 
     fn prev_handshake_hash(&self) -> Option<&[u8]> {
         self.prev_hash.or_else(|| Some(self.inner.handshake_hash()))

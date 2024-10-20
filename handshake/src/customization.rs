@@ -71,6 +71,9 @@ pub trait HandshakeInfo {
     /// positions: 1, 2, and 3.
     fn handshake_position(&self) -> Option<u8>;
 
+    /// Returns the remote public key if it is available.
+    fn remote_public(&self) -> Option<&[u8]>;
+
     /// Returns the handshake hash as of the last *fully processed*
     /// Noise message.
     /// 
